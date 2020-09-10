@@ -8,13 +8,13 @@
 
 #### 优点
 
-1. 低侵入设计，代码的污染极低。
+- 低侵入设计，代码的污染极低。
 
-2. Spring的DI机制将对象之间的依赖关系交由框架处理，降低组件之间的耦合性。
+- Spring的DI机制将对象之间的依赖关系交由框架处理，降低组件之间的耦合性。
 
-3. Spring提供AOP技术，支持将一些通用任务，如安全、事务、日志、权限等进行集中式管理，从而提供更好的复用。提升系统的可维护性。
+- Spring提供AOP技术，支持将一些通用任务，如安全、事务、日志、权限等进行集中式管理，从而提供更好的复用。提升系统的可维护性。
 
-4. Spring对于主流的应用框架提供了集成支持。
+- Spring对于主流的应用框架提供了集成支持。
 
 #### 模块
 
@@ -36,11 +36,11 @@
 
 **xml配置**：该文件主要包含类信息，包含众多<‘bean>标签装配，描述了这些类是如何配置以及相互引入的。xml配置文件冗长且更加干净，大项目中管理困难。
 
-*Q. Spring里面applicationContext.xml文件能不能改成其他文件名？* 
+>*Q. Spring里面applicationContext.xml文件能不能改成其他文件名？* 
 
 ​		ContextLoaderListener是一个ServletContextListener，web应用启动时初始化。缺省情况下，会在WEB-INF/applicationContext.xml文件找Spring的配置。 可以通过定义一个<’context-param>元素，名为contextConfigLocation来改变Spring配置文件的位置。
 
-```
+```html
 <listener> 
 	<listener-class>org.springframework.web.context.ContextLoaderListener
 		<context-param> 
@@ -59,15 +59,15 @@
 
 #### 组件
 
-接口：定义功能
+**接口**：定义功能
 
-Bean类：方法+属性+get/set
+**Bean类**：方法+属性+get/set
 
-AOP：
+**AOP**：
 
-Bean配置文件：类的信息+配置
+**Bean配置文件**：类的信息+配置
 
-用户程序：调用接口
+**用户程序**：调用接口
 
 #### 自动装配方式
 
@@ -89,55 +89,49 @@ Bean配置文件：类的信息+配置
 
 ##### 常用注解
 
-1. 注入类
+注入类：
 
-   **@Autowired**：将类声明为Spring Bean注册到容器中，可以更准确地控制应该在何处以及如何进行自动装配，按byType自动注入，如果该类型查询的结果不止一个，那么@Autowired会根据名称来查找，默认情况下它要求依赖对象必须存在，可以设置required属性为false，否则会抛出异常。
+- **@Autowired**：将类声明为Spring Bean注册到容器中，可以更准确地控制应该在何处以及如何进行自动装配，按byType自动注入，如果该类型查询的结果不止一个，那么@Autowired会根据名称来查找，默认情况下它要求依赖对象必须存在，可以设置required属性为false，否则会抛出异常。
+- **@Qualifier**：当创建了多个相同类型的bean并希望仅使用属性装配其中一个bean时，可以使用@Qualifier搭配@Autowired，通过指定bean的id 来消除歧义。
 
-   **@Qualifier**：当创建了多个相同类型的bean并希望仅使用属性装配其中一个bean时，可以使用@Qualifier搭配@Autowired，通过指定bean的id 来消除歧义。
+- **@Resource**：将类声明为Spring Bean注册到容器中，默认按byName自动注入，可以指定name属性。当找不到与名称匹配的bean时会按照类型来装配注入。
 
-   **@Resource**：将类声明为Spring Bean注册到容器中，默认按byName自动注入，可以指定name属性。当找不到与名称匹配的bean时会按照类型来装配注入。
+- **@Component**：将类声明为Spring Bean注册到容器中，Spring管理组件的通用类型。
 
-   **@Component**：将类声明为Spring Bean注册到容器中，Spring管理组件的通用类型。
+- **@Controller**：将类声明为Spring Bean注册到容器中，用于控制层，将该类标记为Spring Web MVC控制器，主要用于接受用户请求并调用Service层返回数据给前端。
 
-   **@Controller**：将类声明为Spring Bean注册到容器中，用于控制层，将该类标记为Spring Web MVC控制器，主要用于接受用户请求并调用Service层返回数据给前端。
+- **@Service**：将类声明为Spring Bean注册到容器中，用于服务层，主要用于操作持久层、进行逻辑。
 
-   **@Service**：将类声明为Spring Bean注册到容器中，用于服务层，主要用于操作持久层、进行逻辑。
+- **@Repository**：将类声明为Spring Bean注册到容器中，用于持久层，主要用于数据库相关操作。使未经检查的异常有资格转换为Spring DataAccessException。
 
-   **@Repository**：将类声明为Spring Bean注册到容器中，用于持久层，主要用于数据库相关操作。使未经检查的异常有资格转换为Spring DataAccessException。
+- **@Bean**：将方法返回的对象注册到容器中，自定义性更强。
 
-   **@Bean**：将方法返回的对象注册到容器中，自定义性更强。
+- **@Required**：用于bean属性setter()方法，指示必须在配置时使用bean定义中的显式属性值或使用自动装配填充受影响的bean属性，如果未填充该属性，则容器抛出BeanInitializationException。
 
-   **@Required**：用于bean属性setter()方法，指示必须在配置时使用bean定义中的显式属性值或使用自动装配填充受影响的bean属性，如果未填充该属性，则容器抛出BeanInitializationException。
+- **@Value**：值类型
 
-   **@Value**：值类型
+- **@Conditional注解**：条件注解，只有满足一定的条件才注入组件。这个条件要实现Condition接口，这是一个功能注解接口，然后重写match方法，符合条件就注入。
 
-   **@Conditional注解**：条件注解，只有满足一定的条件才注入组件。这个条件要实现Condition接口，这是一个功能注解接口，然后重写match方法，符合条件就注入。
+生命周期类：
 
-2. 生命周期类
+- **@PostConstruct**：指定该方法为init-method
 
-   **@PostConstruct**：指定该方法为init-method
+- **@PreDestroy**：指定该方法为destroy-method@Configration**：在类上添加该注解，通过调用@Bean方法定义Bean之间的依赖关系。
 
-   **@PreDestroy**：指定该方法为destroy-method@Configration**：在类上添加该注解，通过调用@Bean方法定义Bean之间的依赖关系。
+单元测试类：
 
-3. 单元测试类
+- **@Runwith(SpringJUnit4ClassRunner.class)**
+- **@ContextConfiguration()**：加载配置，"classpath:配置文件"，或classes={配置类.class}。
 
-   **@Runwith(SpringJUnit4ClassRunner.class)**
+配置类：
 
-   **@ContextConfiguration()**：加载配置，"classpath:配置文件"，或classes={配置类.class}。
+- **@ComponentScan**：组件扫描注解，通过扫描某些包下的组件批量的注册。关键属性有：
 
-4. 配置类
-
-   **@ComponentScan**：组件扫描注解，通过扫描某些包下的组件批量的注册。关键属性有：
-
-   1. basePackages/value：表示扫描的路径，值的类型为String[]。
-
-   2. includeFilters：包含过滤器Filter[]，指定扫描符合条件的组件。其中Filter[]中的Filter是ComponentScan内部的注解。
-
-   3. excludeFilters：排除过滤器Filter[]，不扫描不符合条件的组件。其中Filter[]中的Filter是ComponentScan内部的注解。
-
-   4. useDefaultFilters：默认的扫描策略默认为true，如果想要用自定义的策略 该值要设为false。
-
-    **@EnableTransactionManagement**：驱动的配置类
+    1. basePackages/value：表示扫描的路径，值的类型为String[]。
+    2. includeFilters：包含过滤器Filter[]，指定扫描符合条件的组件。其中Filter[]中的Filter是ComponentScan内部的注解。
+    3. excludeFilters：排除过滤器Filter[]，不扫描不符合条件的组件。其中Filter[]中的Filter是ComponentScan内部的注解。
+    4. useDefaultFilters：默认的扫描策略默认为true，如果想要用自定义的策略 该值要设为false。
+-  **@EnableTransactionManagement**：驱动的配置类
 
 #### Bean
 
@@ -193,30 +187,30 @@ Bean配置文件：类的信息+配置
 
 ###### 出现场景
 
-1. 构造器的循环依赖问题无法解决，只能抛出异常。
-2. 作用域为prototype的Bean的循环依赖问题，无法解决
+- 构造器的循环依赖问题无法解决，只能抛出异常。
+- 作用域为prototype的Bean的循环依赖问题，无法解决
 
-3. setter注入构成的循环依赖，Spring的设计机制可以解决。
+- setter注入构成的循环依赖，Spring的设计机制可以解决。
 
 ###### **解决方案**
 
-1. 不使用基于构造函数的依赖注入
-2. 字段上使用@Autowired注解，让 Spring 决定在合适的时机注入。
-3. 用基于setter方法的依赖注入
+- 不使用基于构造函数的依赖注入
+- 字段上使用@Autowired注解，让 Spring 决定在合适的时机注入。
+- 用基于setter方法的依赖注入
 
 ###### 解决机制
 
 ​		Spring实例化一个bean分两步进行，首先调用构造函数实例化目标bean，然后为其注入属性。实例化一个bean时，首先递归的实例化其所依赖的所有bean，直到某个bean没有依赖其他bean，此时就会将该实例返回，然后反递归的将获取到的bean设置为各个上层bean的属性。
 
-e.g.
-
-1. beanA进行初始化，并且将自己进行初始化的状态记录下来，并提前向外暴露一个单例工厂方法，从而使其他bean能引用到该bean。
-
-2. beanA中有beanB的依赖，于是开始初始化beanB。
-
-3. 初始化beanB的过程中又发现beanB依赖了beanA，于是又进行beanA的初始化，这时发现beanA已经在进行初始化了，程序发现了存在的循环依赖，然后通过步骤一中暴露的单例工厂方法拿到beanA的引用从而beanB拿到beanA的引用，完成注入，完成了初始化，此时的beanA只是完成了构造函数的注入但未完成其他步骤，如此beanB的引用也就可以被beanA拿到，从而beanA也就完成了初始化。
-
-![image-20200413211924458](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200413211924458.png)
+> 例如：
+>
+> 1. beanA进行初始化，并且将自己进行初始化的状态记录下来，并提前向外暴露一个单例工厂方法，从而使其他bean能引用到该bean。
+>
+> 2. beanA中有beanB的依赖，于是开始初始化beanB。
+>
+> 3. 初始化beanB的过程中又发现beanB依赖了beanA，于是又进行beanA的初始化，这时发现beanA已经在进行初始化了，程序发现了存在的循环依赖，然后通过步骤一中暴露的单例工厂方法拿到beanA的引用从而beanB拿到beanA的引用，完成注入，完成了初始化，此时的beanA只是完成了构造函数的注入但未完成其他步骤，如此beanB的引用也就可以被beanA拿到，从而beanA也就完成了初始化。
+>
+> ![image-20200413211924458](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200413211924458.png)
 
 ### 源码
 
@@ -240,31 +234,30 @@ e.g.
 
 #### IOC注入方式
 
-构造器注入
+- 构造器注入
 
-setter()方法注入
+- setter()方法注入
 
-接口注入（注解注入）
+- 接口注入（注解注入）
+
 
 #### IOC容器种类
 
 **BeanFactory**：
 
-1. Spring里最底层的接口，包含了各种Bean的定义，读取Bean的配置文件，管理Bean的加载、实例化，控制Bean的生命周期，维护Bean之间的依赖关系。
-2. 采用延迟加载形式来注入Bean，第一次调用getBean()时，才对该Bean进行加载实例化。不能发现一些存在的Spring的配置问题，如果Bean的某一个属性没有注入，BeanFacotry加载后，直至第一次使用调用getBean()方法才会抛出异常。
-3. 使用语法显示提供资源对象，不支持基于依赖的注解。
+​		Spring里最底层的接口，包含了各种Bean的定义，读取Bean的配置文件，管理Bean的加载、实例化，控制Bean的生命周期，维护Bean之间的依赖关系。
+
+​		采用延迟加载形式来注入Bean，第一次调用getBean()时，才对该Bean进行加载实例化。不能发现一些存在的Spring的配置问题，如果Bean的某一个属性没有注入，BeanFacotry加载后，直至第一次使用调用getBean()方法才会抛出异常。
+
+​		使用语法显示提供资源对象，不支持基于依赖的注解。
 
 **ApplicationContext**：
 
-1. 继承BeanFactory接口，提供了更完整的框架功能：
-   1. 继承MessageSource，支持国际化。 
-   2. 统一的资源文件访问方式。 
-   3. 提供在监听器中注册Bean的事件。
-   4. 同时加载多个配置文件。
-   5. 载入多个上下文 ，使得每一个上下文都专注于一个特定的层次，比如应用的web层。
+​		继承BeanFactory接口，提供了更完整的框架功能：继承MessageSource，支持国际化。 统一的资源文件访问方式。 提供在监听器中注册Bean的事件。同时加载多个配置文件。载入多个上下文 ，使得每一个上下文都专注于一个特定的层次，比如应用的web层。
 
-2. 在启动时创建所有的Bean。在容器启动时，我们就可以发现Spring中存在的配置错误，有利于检查所依赖属性是否注入。相对于BeanFactory，ApplicationContext唯一的不足是占用内存空间，当应用程序配置Bean较多时，程序启动较慢。
-3. 自己创建并管理资源对象，支持基于依赖的注解。
+​		在启动时创建所有的Bean。在容器启动时，我们就可以发现Spring中存在的配置错误，有利于检查所依赖属性是否注入。相对于BeanFactory，ApplicationContext唯一的不足是占用内存空间，当应用程序配置Bean较多时，程序启动较慢。
+
+​		自己创建并管理资源对象，支持基于依赖的注解。
 
 ##### 事件类型
 
@@ -308,11 +301,9 @@ setter()方法注入
 
 `invoke(Object proxy,Method method,Object[] args)`方法参数解释：
 
-​		proxy：最终生成的代理实例
-
-​		method：被代理目标实例的某个具体方法
-
-​		args：被代理目标实例某个方法的具体入参, 在方法反射调用时使用。
+- proxy：最终生成的代理实例
+- method：被代理目标实例的某个具体方法
+- args：被代理目标实例某个方法的具体入参, 在方法反射调用时使用。
 
 ###### CGLib动态代理
 
@@ -366,24 +357,26 @@ setter()方法注入
 
 ​		Spring本身并不直接管理事务，而是提供了事务管理器接口，对于不同的框架或者数据源则用不同的事务管理器。本质是数据库对事务的支持，即提交和回滚通过binlog和redo log实现。
 
-​		对于事务，它把相关的属性都封装到一个实体里，属性包括：
+对于事务，它把相关的属性都封装到一个实体里，属性包括：
 
-```
-	int propagationBehavior;	//事务的传播行为
-    int isolationLevel;		//事务隔离级别
-    int timeout;	//事务完成的最短时间
-    boolean readOnly;	//是否只读
+```java
+int propagationBehavior;	//事务的传播行为
+int isolationLevel;		//事务隔离级别
+int timeout;	//事务完成的最短时间
+boolean readOnly;	//是否只读
 ```
 
 #### 事务管理方式
 
 ​		Spring提供了对编程式事务和声明式事务的支持。
 
-**编程式事务**：嵌在业务代码中，灵活，维护困难。
+##### 编程式事务
+
+​		嵌在业务代码中，灵活，维护困难。
 
 一般事务的定义步骤：
 
-```
+```java
 TransactionDefinition td = new TransactionDefinition();		//事务属性定义
 try{ 
 	//do sth
@@ -395,7 +388,7 @@ try{ 
 
 Spring事务主要使用transactionTemplate，省略了部分的提交，回滚，一系列的事务对象定义，需注入事务管理对象。
 
-```
+```java
 void add(){
 	transactionTemplate.execute( new TransactionCallback(){ 
 		public Object doInTransaction(TransactionStatus ts){
@@ -405,7 +398,104 @@ void add(){
 }
 ```
 
-**声明式事务**：使用注解或基于xml文件配置来管理事务，事务管理与业务代码分离，只需在配置文件中做相关的事务规则声明或通过@Transactional注解的方式，便可以将事务规则应用到业务逻辑中。声明式事务管理建立在AOP上，本质是通过AOP对方法前后进行拦截，将事务处理的功能编织到方法中，即目标方法开始前加入一个事务，执行完毕后根据执行情况提交或回滚事务。声明式事务的缺点是最细粒度只能作用到方法级别，无法做到像编程式事务那样可以作用到代码块级别。
+##### 声明式事务
+
+​		使用注解或基于xml文件配置来管理事务，事务管理与业务代码分离，只需在配置文件中做相关的事务规则声明或通过@Transactional注解的方式，便可以将事务规则应用到业务逻辑中。声明式事务管理建立在AOP上，本质是通过AOP对方法前后进行拦截，将事务处理的功能编织到方法中，即目标方法开始前加入一个事务，执行完毕后根据执行情况提交或回滚事务。声明式事务的缺点是最细粒度只能作用到方法级别，无法做到像编程式事务那样可以作用到代码块级别。
+
+​		@Transactional 注解可以被用在接口定义和接口方法、类定义和类的 public 方法上。对于其它非public的方法，如果标记了@Transactional也不会报错，但方法没有事务功能。
+
+​		用Spring事务管理器时，由spring来负责数据库的打开、提交、回滚。默认遇到运行期异常，即不受检查的异常（throw new RuntimeException("注释");）时会回滚。而遇到需要捕获的异常，即非运行时抛出的受检查的异常（throw new Exception("注释");）时不会回滚，需我们指定方式来让事务回滚。要想所有异常都回滚，要加上 `@Transactional(rollbackFor={Exception.class,其它异常})` 。如果让unchecked例外不回滚，需加上`@Transactional(notRollbackFor=RunTimeException.class)`。
+
+​		仅仅 @Transactional 注解的出现不足于开启事务行为，它仅仅是一种元数据，能够被可以识别 @Transactional 注解和上述的配置适当的具有事务行为的beans所使用。
+
+​		Spring团队的建议是你在具体的类（或类的方法）上使用 @Transactional 注解，而不要使用在类所要实现的任何接口上。可以在接口上使用 @Transactional 注解，但这将只能当你设置了基于接口的代理时它才生效。因为注解是不能继承的，这就意味着如果你正在使用基于类的代理时，那么事务的设置将不能被基于类的代理所识别，而且对象也将不会被事务代理所包装（将被确认为严重的）。
+
+> 《阿里巴巴开发手册》规定：
+>
+> - 【参考】@Transactional事务不要滥用。事务会影响数据库的QPS，另外使用事务的地方需要考虑各方面的回滚方案，包括缓存回滚、搜索引擎回滚、消息补偿、统计修正等。
+>
+
+###### 参数
+
+- readOnly
+
+    该属性用于设置当前事务是否为只读事务，设置为true表示只读，false则表示可读写，默认值为false。
+
+    > 例如：`@Transactional(readOnly=true)`
+
+- rollbackFor
+
+    该属性用于设置需要进行回滚的异常类数组，当方法中抛出指定异常数组中的异常时，则进行事务回滚。
+
+    > 例如：指定单一异常类：`@Transactional(rollbackFor=RuntimeException.class)`。指定多个异常类：`@Transactional(rollbackFor={RuntimeException.class, Exception.class})`。
+
+- rollbackForClassName
+
+    该属性用于设置需要进行回滚的异常类名称数组，当方法中抛出指定异常名称数组中的异常时，则进行事务回滚。
+
+    > 例如：指定单一异常类名称：`@Transactional(rollbackForClassName="RuntimeException")`。指定多个异常类名称：`@Transactional(rollbackForClassName={"RuntimeException","Exception"})`。
+
+- noRollbackFor
+
+    该属性用于设置不需要进行回滚的异常类数组，当方法中抛出指定异常数组中的异常时，不进行事务回滚。
+
+    > 例如：指定单一异常类：`@Transactional(noRollbackFor=RuntimeException.class)`。指定多个异常类：`@Transactional(noRollbackFor={RuntimeException.class, Exception.class})`。
+
+- noRollbackForClassName
+
+    该属性用于设置不需要进行回滚的异常类名称数组，当方法中抛出指定异常名称数组中的异常时，不进行事务回滚。
+
+    > 例如：指定单一异常类名称：`@Transactional(noRollbackForClassName="RuntimeException")`。指定多个异常类名称：`@Transactional(noRollbackForClassName={"RuntimeException","Exception"})`。
+
+- propagation
+
+    该属性用于设置事务的传播行为。
+
+    ```java
+    //如果有事务, 那么加入事务, 没有的话新建一个(默认情况下)
+    @Transactional(propagation=Propagation.REQUIRED) 
+    　
+    //容器不为这个方法开启事务
+    @Transactional(propagation=Propagation.NOT_SUPPORTED) 
+    　　
+    //不管是否存在事务,都创建一个新的事务,原来的挂起,新的执行完毕,继续执行老的事务
+    @Transactional(propagation=Propagation.REQUIRES_NEW) 
+    　　
+    //必须在一个已有的事务中执行,否则抛出异常
+    @Transactional(propagation=Propagation.MANDATORY) 
+    
+    //必须在一个没有的事务中执行,否则抛出异常(与Propagation.MANDATORY相反)
+    @Transactional(propagation=Propagation.NEVER) 
+    
+    //如果其他bean调用这个方法,在其他bean中声明事务,那就用事务.如果其他bean没有声明事务,那就不用事务。
+    @Transactional(propagation=Propagation.SUPPORTS) 
+    ```
+
+    > 例如：@Transactional(propagation=Propagation.NOT_SUPPORTED,readOnly=true)
+
+- isolation
+
+    该属性用于设置底层数据库的事务隔离级别，事务隔离级别用于处理多事务并发的情况，通常使用数据库的默认隔离级别即可，基本不需要进行设置。MYSQL 默认为 REPEATABLE_READ 级别，SQLSERVER 默认为 READ_COMMITTED 级别。
+
+    ```java
+    //读取未提交数据(会出现脏读, 不可重复读) 基本不使用
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
+    
+    //读取已提交数据(会出现不可重复读和幻读)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    　　
+    //可重复读(会出现幻读)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    
+    //串行化
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    ```
+
+- timeout
+
+    该属性用于设置事务的超时秒数，默认值为-1，表示永不超时。
+
+    > 例如：`@Transactional(timeout=30)`    //30秒
 
 #### 事务隔离级别
 
@@ -417,17 +507,18 @@ void add(){
 
 **ISOLATION_REPEATABLE_READ**：可重复读，保证一个事务修改的数据提交后才能被另一事务读取，但是不能看到该事务对已有记录的更新，即对同一查询读取结果一致。可能导致幻读。可重复读是指对于其他事务操作的数据，多次读取的结果都是一样的，如果第一次读取能够读取到其他事务的数据，后面不管其他事务有任何其他任何操作，都不会影响已读取到的其他事务产生的数据。但是自己所在的事务中产生的数据，自己是都可以读取到的。
 
-e.g. 可重复读模式下幻读现象：
-
-​		事务A操作：
-​		①打开事务
-​		②查询号码为X的记录，不存在
-​		③插入号码为X的数据，插入报错
-​		④查询号码为X的记录，发现还是不存在（由于是可重复读，所以读取记录X还是不存在的）
-
-​		事物B操作：在事务A第②步操作时插入了一条X的记录，违反了唯一约束，导致A中第3步插入报错。
-
-​		上面操作对A来说就像发生了幻觉一样，明明查询X（A中第二步、第四步）不存在，但却无法插入成功。幻读可以这么理解：事务中后面的操作（插入号码X）需要上面的读取操作（查询号码X的记录）提供支持，但读取操作却不能支持下面的操作时产生的错误，就像发生了幻觉一样。
+> 例如：可重复读模式下幻读现象：
+>
+> 事务A操作：
+>
+> 1. 打开事务
+> 2. 查询号码为X的记录，不存在
+> 3. 插入号码为X的数据，插入报错
+> 4. 查询号码为X的记录，发现还是不存在（由于是可重复读，所以读取记录X还是不存在的）
+>
+> 事物B操作：在事务A第②步操作时插入了一条X的记录，违反了唯一约束，导致A中第3步插入报错。
+>
+> 上面操作对A来说就像发生了幻觉一样，明明查询X（A中第二步、第四步）不存在，但却无法插入成功。幻读可以这么理解：事务中后面的操作（插入号码X）需要上面的读取操作（查询号码X的记录）提供支持，但读取操作却不能支持下面的操作时产生的错误，就像发生了幻觉一样。
 
 **ISOLATION_SERIALIZABLE**：串行化，事务依次执行，不并发，影响性能。一个事务在执行的过程中完全看不到其他事务对数据库所做的更新。
 
@@ -504,7 +595,7 @@ Spring处理线程并发问题：
 
 #### 执行顺序
 
-​		**Interceptor拦截器和Filter的区别**：Spring的拦截器与Servlet的Filter均为AOP编程思想的体现，都能实现权限检查、日志记录等。不同的是：
+**Interceptor拦截器和Filter的区别**：Spring的拦截器与Servlet的Filter均为AOP编程思想的体现，都能实现权限检查、日志记录等。不同的是：
 
 1. 使用范围不同：Filter是Servlet规范规定的，只能用于Web程序中。而拦截器既可以用于Web程序，也可以用于Application、Swing程序中。
 2. 规范不同：Filter是在Servlet规范中定义的，是Servlet容器支持的。而拦截器是在Spring容器内的，是Spring框架支持的。
@@ -601,27 +692,27 @@ Spring处理线程并发问题：
 
 #### 运行
 
-1. 命令打包或者放到容器中运行，Spring Boot内置了Tomcat/Jetty容器，可独立运行。
+- 命令打包或者放到容器中运行，Spring Boot内置了Tomcat/Jetty容器，可独立运行。
 
-2. 直接执行main方法运行
+- 直接执行main方法运行
 
-3. 用Maven/Gradle插件运行
+- 用Maven/Gradle插件运行
 
 #### 热部署
 
 ​		Spring Boot提供了一个名为spring-boot-devtools的模块来使应用支持热部署，提高开发者的开发效率，无需手动重启Spring Boot应用。添加依赖devtools，在配置文件中自定义：
 
-1. 热部署开关：spring.devtools.restart.enabled: true
-2. 指定热部署的目录：spring.devtools.restart.additional-paths: src/main/java
-3. 指定目录不更新：spring.devtools.restart.exclude: test/**
+- 热部署开关：spring.devtools.restart.enabled: true
+- 指定热部署的目录：spring.devtools.restart.additional-paths: src/main/java
+- 指定目录不更新：spring.devtools.restart.exclude: test/**
 
 #### 注解
 
 **@SpringBootApplication**：包含了三个注解：
 
-1. **@SpringBootConfiguration**：组合了@Configuration注解，定义配置类，替换xml配置文件，实现配置文件的功能。添加该注解的类内部包含有一个或多个标有@Bean注解的方法， 这些方法将会被AnnotationConfigApplicationContext或AnnotationConfigWebApplicationContext类进行扫描，并用于构建bean定义，将实例注入到Spring容器中，初始化Spring容器。
-2. **@ComponentScan**：Spring组件扫描，用于将一些标注了特定注解的bean定义批量采集注册到Spring的IOC容器之中，这些特定的注解大致包括：@Controller、@Entity、@Component、@Service、@Repository。
-3. **@EnableAutoConfiguration**：打开自动配置的功能，也可以用exclude属性关闭某个自动配置的选项。将应用所有符合条件的@Configuration配置都加载到当前IOC容器中。
+- **@SpringBootConfiguration**：组合了@Configuration注解，定义配置类，替换xml配置文件，实现配置文件的功能。添加该注解的类内部包含有一个或多个标有@Bean注解的方法， 这些方法将会被AnnotationConfigApplicationContext或AnnotationConfigWebApplicationContext类进行扫描，并用于构建bean定义，将实例注入到Spring容器中，初始化Spring容器。
+- **@ComponentScan**：Spring组件扫描，用于将一些标注了特定注解的bean定义批量采集注册到Spring的IOC容器之中，这些特定的注解大致包括：@Controller、@Entity、@Component、@Service、@Repository。
+- **@EnableAutoConfiguration**：打开自动配置的功能，也可以用exclude属性关闭某个自动配置的选项。将应用所有符合条件的@Configuration配置都加载到当前IOC容器中。
 
 **@RequestMapping**：
 
@@ -671,4 +762,4 @@ Spring处理线程并发问题：
 
 ### 事务
 
-​		整个事务建立在AOP的基础之上，其核心类是TransactionInterceptor，该类的invokeWithinTransaction方法是事务处理的核心方法，其中封装了我们创建的DataSourceTransactionManager对象，该对象是执行回滚或者提交的执行单位。TransactionInterceptor和标注@Aspect注解的类的作用相同，拦截指定方法，而在TransactionInterceptor中是通过是否标有事务注解来决定的，如果一个类中任意方法含有事务注解，那么这个方法就会被代理。而Mybatis的事务和Spring的事务协作则根据他们的SqlSession是否是同一个SqlSession来决定的，如果是同一个，则交给Spring，如果不是，Mybatis则自己处理。
+​		整个事务建立在AOP的基础之上，其核心类是TransactionInterceptor，该类的invokeWithinTransaction方法是事务处理的核心方法，其中封装了我们创建的DataSourceTransactionManager对象，该对象是执行回滚或者提交的执行单位。TransactionInterceptor和标注@Aspect注解的类的作用相同，拦截指定方法，而在TransactionInterceptor中是通过是否标有事务注解来决定的，如果一个类中任意方法含有事务注解，那么这个方法就会被代理。而Mybatis的事务和Spring的事务协作则根据他们的SqlSession是否是同一个SqlSession来决定的，如果是同一个，则交给Spring，如果不是，Mybatis则自己处理。@Transactional
